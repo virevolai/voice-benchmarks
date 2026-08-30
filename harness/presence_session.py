@@ -42,20 +42,20 @@ async def resolve_ws_url(explicit: str = "") -> str:
     import httpx
 
     base = os.environ.get("BOHITA_API_BASE", DEFAULT_API_BASE).rstrip("/")
-    async with httpx.AsyncClient(timeout=30) as client:
-        response = await client.post(
-            f"{base}/v1/sessions",
-            headers={"Authorization": f"Bearer {key}"},
-            json={
-                "surface": {"type": "voice"},
-                "external_id": os.environ.get("BENCH_EXTERNAL_ID", "voice-benchmark"),
-            },
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await _post_session(client, base, key)
+    except httpx.ConnectError as exc:
+        raise SystemExit(
+            f"could not reach {base}: {exc}. Override the host with "
+            "BOHITA_API_BASE, or set PRESENCE_WS_URL to skip session creation."
+        ) from exc
+
+    if response.status_code >= 400:
+        raise SystemExit(
+            f"session create failed ({response.status_code}): {response.text[:200]}"
         )
-        if response.status_code >= 400:
-            raise SystemExit(
-                f"session create failed ({response.status_code}): {response.text[:200]}"
-            )
-        body = response.json()
+    body = response.json()
 
     # The session websocket lives under `realtime.url` and already carries a
     # short-lived, session-scoped token. Treat it as a credential: it is not
@@ -68,3 +68,14 @@ async def resolve_ws_url(explicit: str = "") -> str:
             f"voice-capable? keys: {sorted(body)}"
         )
     return url
+
+
+async def _post_session(client, base: str, key: str):
+    return await client.post(
+        f"{base}/v1/sessions",
+        headers={"Authorization": f"Bearer {key}"},
+        json={
+            "surface": {"type": "voice"},
+            "external_id": os.environ.get("BENCH_EXTERNAL_ID", "voice-benchmark"),
+        },
+    )

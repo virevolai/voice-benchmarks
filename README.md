@@ -63,9 +63,10 @@ sh fixtures/make_parakeet_smoke_fixture.sh
 sh fixtures/make_think_probe_fixture.sh
 
 # Whole suite. Vendors without credentials are skipped, not failed.
-export OPENAI_API_KEY=...
-export GEMINI_API_KEY=...
-export BOHITA_API_KEY=...        # creates a Presence session via the API
+# Each key is used only for its own vendor's API — nothing is proxied.
+export OPENAI_API_KEY=...   # -> api.openai.com, direct
+export GEMINI_API_KEY=...   # -> Google Gemini Live, direct
+export BOHITA_API_KEY=...   # -> creates a Presence session only
 sh run_benchmark_suite.sh 40
 ```
 
@@ -76,10 +77,19 @@ PYTHONPATH=harness uv run --project . python harness/benchmark_async_think.py --
 PYTHONPATH=harness uv run --project . python harness/benchmark_presence_long_session.py --turns 40
 ```
 
-The Presence harness creates a session through the public API and uses the
-`realtime.url` it returns — the same path an integrator takes. To point it at
-an existing or self-hosted deployment instead, set `PRESENCE_WS_URL` and the
-API call is skipped.
+You need a credential per vendor you want to measure, and each one talks to
+that vendor directly: OpenAI and Gemini are called with your own keys, and
+nothing routes through Bohita. Run one vendor, two, or all three.
+
+`BOHITA_API_KEY` is only for the Presence line. The harness creates a session
+(`POST /v1/sessions`, default base `https://api.bohita.com`) and uses
+the `realtime.url` it returns — the same path an integrator takes. Override
+the base with `BOHITA_API_BASE`, or set `PRESENCE_WS_URL` to point at an
+existing deployment and skip session creation entirely.
+
+That URL carries a short-lived, session-scoped token. The harness treats it as
+a credential and never writes it to `results/`, so a run file is safe to
+attach to a pull request.
 
 **Cost:** roughly $1.50 for the two hosted vendors at 40 turns. Each
 long-session harness takes `--max-estimated-usd` and aborts before exceeding
