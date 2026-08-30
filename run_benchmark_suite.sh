@@ -46,13 +46,13 @@ else
   echo "\nskipping OpenAI: OPENAI_API_KEY not set"
 fi
 
-if [ -n "${PRESENCE_WS_URL:-}" ]; then
+if [ -n "${PRESENCE_WS_URL:-}${BOHITA_API_KEY:-}" ]; then
   echo "\n== Presence, ${TURNS} turns =="
   PYTHONPATH=harness uv run --project . python -u harness/benchmark_presence_long_session.py \
-    --turns "$TURNS" --url "$PRESENCE_WS_URL" \
+    --turns "$TURNS" ${PRESENCE_WS_URL:+--url "$PRESENCE_WS_URL"} \
     || echo "presence run failed; continuing"
 else
-  echo "\nskipping Presence: PRESENCE_WS_URL not set"
+  echo "\nskipping Presence: set BOHITA_API_KEY or PRESENCE_WS_URL"
 fi
 
 # The async-tool probe is a separate, much shorter run: eight turns, one
@@ -64,7 +64,7 @@ if [ "${BENCH_SKIP_ASYNC:-0}" != "1" ]; then
     case "$vendor" in
       gemini)   [ -n "${GEMINI_API_KEY:-}${GOOGLE_API_KEY:-}" ] || continue ;;
       openai)   [ -n "${OPENAI_API_KEY:-}" ] || continue ;;
-      presence) [ -n "${PRESENCE_WS_URL:-}" ] || continue ;;
+      presence) [ -n "${PRESENCE_WS_URL:-}${BOHITA_API_KEY:-}" ] || continue ;;
     esac
     echo "\n== async tool probe: ${vendor} =="
     PYTHONPATH=harness uv run --project . python -u harness/benchmark_async_think.py \

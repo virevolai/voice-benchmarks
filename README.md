@@ -65,7 +65,7 @@ sh fixtures/make_think_probe_fixture.sh
 # Whole suite. Vendors without credentials are skipped, not failed.
 export OPENAI_API_KEY=...
 export GEMINI_API_KEY=...
-export PRESENCE_WS_URL=wss://...
+export BOHITA_API_KEY=...        # creates a Presence session via the API
 sh run_benchmark_suite.sh 40
 ```
 
@@ -75,6 +75,11 @@ Or one harness at a time:
 PYTHONPATH=harness uv run --project . python harness/benchmark_async_think.py --vendor openai
 PYTHONPATH=harness uv run --project . python harness/benchmark_presence_long_session.py --turns 40
 ```
+
+The Presence harness creates a session through the public API and uses the
+`realtime.url` it returns — the same path an integrator takes. To point it at
+an existing or self-hosted deployment instead, set `PRESENCE_WS_URL` and the
+API call is skipped.
 
 **Cost:** roughly $1.50 for the two hosted vendors at 40 turns. Each
 long-session harness takes `--max-estimated-usd` and aborts before exceeding
@@ -144,4 +149,4 @@ in the harness. Open an issue with the run JSON attached.
 
 ## License
 
-Apache 2.0.
+MIT.

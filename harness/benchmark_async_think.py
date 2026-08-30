@@ -257,9 +257,9 @@ async def run_presence(args, probe_pcm: bytes, warm_pcm: bytes,
                        followup_pcm: bytes) -> dict:
     import websockets
 
-    url = args.url or os.environ.get("PRESENCE_WS_URL", "")
-    if not url:
-        raise SystemExit("set PRESENCE_WS_URL or pass --url")
+    from presence_session import resolve_ws_url
+
+    url = await resolve_ws_url(args.url)
 
     probe = Probe()
 

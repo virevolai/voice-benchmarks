@@ -1,6 +1,6 @@
 {
   "model": "presence-local-stack",
-  "url": "<PRESENCE_WS_URL>",
+  "url": "<session websocket>",
   "comparability": {
     "latency_boundary": "wall-clock instant the final speech sample was sent -> first response audio frame; identical definition to the Gemini and OpenAI runs",
     "input_rate_hz": 16000,

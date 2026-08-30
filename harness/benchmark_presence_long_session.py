@@ -36,8 +36,10 @@ from audio import (
     _read_pcm16_mono,
 )
 
-# Set PRESENCE_WS_URL to point the harness at a deployment. No default is
-# baked in: the published harness should not carry anyone's endpoint.
+from presence_session import resolve_ws_url
+
+# No endpoint is baked in. A session is created through the public API unless
+# --url or $PRESENCE_WS_URL points at an existing one.
 DEFAULT_URL = os.environ.get("PRESENCE_WS_URL", "")
 
 def percentile(values: list[float], fraction: float) -> float | None:
@@ -150,8 +152,9 @@ async def run(args) -> dict:
     started = time.monotonic()
     turns: list[dict] = []
 
+    url = await resolve_ws_url(args.url)
     async with websockets.connect(
-        args.url, max_size=None, open_timeout=90, ping_interval=20
+        url, max_size=None, open_timeout=90, ping_interval=20
     ) as ws:
         ready = await wait_ready(ws)
         connected_ms = round((time.monotonic() - started) * 1_000)
@@ -168,7 +171,9 @@ async def run(args) -> dict:
 
     return {
         "model": "presence-local-stack",
-        "url": args.url,
+        # Deliberately not the resolved URL: it carries a session-scoped
+        # token, and results in this repo are published.
+        "url": "<session websocket>",
         "comparability": {
             "latency_boundary": (
                 "wall-clock instant the final speech sample was sent -> first "
@@ -212,8 +217,6 @@ def main() -> None:
     ap.add_argument("--final-audio", default="/tmp/bohita-gemini-memory-final.wav")
     ap.add_argument("--out", default="results/presence-long-session.json")
     args = ap.parse_args()
-    if not args.url:
-        raise SystemExit("set PRESENCE_WS_URL or pass --url")
 
     result = asyncio.run(run(args))
     out = Path(args.out)
