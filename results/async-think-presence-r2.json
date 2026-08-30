@@ -1,0 +1,29 @@
+{
+  "vendor": "presence",
+  "probe_turn": 8,
+  "measures": "whether new user speech gets a reply while a tool call is still pending; participant-observable, not vendor-internal",
+  "simulated_tool_seconds": null,
+  "tool_note": "presence runs its real think tool; hosted vendors are given a think function with the same contract and a stub that resolves after simulated_tool_seconds, so the tool's own duration is identical and only the stack's behaviour differs",
+  "replied_during_tool": true,
+  "followup_latency_ms": 2569,
+  "tool_dispatched": true,
+  "tool_name": "think",
+  "spoke_during_tool": true,
+  "dispatch_to_first_audio_ms": 2783,
+  "tool_wall_ms": 10388,
+  "speech_end_to_dispatch_ms": 1926,
+  "audio_ms_during_tool": 3920,
+  "spoke_before_dispatch": false,
+  "audio_ms_before_dispatch": 0,
+  "events": [
+    "face",
+    "clear",
+    "transcript",
+    "job_status",
+    "performance",
+    "audible_span_started",
+    "expression"
+  ],
+  "followup_endpointed": true,
+  "verdict": "session stays live during tool call"
+}

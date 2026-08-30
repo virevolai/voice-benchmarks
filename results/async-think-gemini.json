@@ -1,0 +1,23 @@
+{
+  "vendor": "gemini",
+  "probe_turn": 8,
+  "measures": "whether new user speech gets a reply while a tool call is still pending; participant-observable, not vendor-internal",
+  "simulated_tool_seconds": 20.0,
+  "tool_note": "presence runs its real think tool; hosted vendors are given a think function with the same contract and a stub that resolves after simulated_tool_seconds, so the tool's own duration is identical and only the stack's behaviour differs",
+  "replied_during_tool": false,
+  "followup_latency_ms": null,
+  "tool_dispatched": true,
+  "tool_name": "think",
+  "spoke_during_tool": false,
+  "dispatch_to_first_audio_ms": null,
+  "tool_wall_ms": 20001,
+  "speech_end_to_dispatch_ms": 4591,
+  "audio_ms_during_tool": 0,
+  "spoke_before_dispatch": true,
+  "audio_ms_before_dispatch": 7740,
+  "events": [
+    "tool_call",
+    "turn_complete"
+  ],
+  "verdict": "session blocked until tool returns"
+}

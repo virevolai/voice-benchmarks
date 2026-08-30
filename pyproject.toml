@@ -1,0 +1,12 @@
+[project]
+name = "voice-benchmarks"
+version = "0.1.0"
+description = "Long-session and async-tool benchmarks for realtime voice APIs"
+requires-python = ">=3.11"
+dependencies = [
+    "websockets>=13.0",
+    "google-genai>=0.3.0",
+]
+
+[tool.uv]
+package = false

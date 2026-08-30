@@ -1,0 +1,222 @@
+{
+  "benchmark": "long-session voice: latency and cost vs turn count",
+  "generated": "2026-08-29",
+  "method": {
+    "latency_boundary": "final speech sample sent -> first response audio byte received. Connection setup excluded and reported separately.",
+    "fixtures": "identical scripted conversation for every vendor: a codename to remember, repeated middle turns, then a recall question that verifies the session still holds context at the end.",
+    "turn_end": "each vendor's own endpointing closes the turn, so part of every measurement is that vendor's decision about when the user stopped talking. This is what a user experiences; it is not pure time-to-first-token.",
+    "cost_source": "token counts are vendor-reported. Dollar figures are computed from published list prices on the run date, not from billed invoices.",
+    "not_comparable": [
+      "Audio token counts across vendors: OpenAI Realtime requires 24 kHz input where the others use 16 kHz, and tokenisation is rate-dependent. Compare cost curves, not absolute tokens.",
+      "Presence bills occupied time rather than tokens, so it has no per-turn token cost to place on the same axis. What is comparable is the shape: whether a later turn costs more than an earlier one."
+    ]
+  },
+  "vendors": [
+    {
+      "vendor": "Gemini Live 3.1 Flash",
+      "run_date": "2026-07-24",
+      "turns_completed": 40,
+      "latency_ms": {
+        "p50": 1064,
+        "p95": 1245
+      },
+      "cost": {
+        "total_usd": 0.7977,
+        "first_turn_usd": 0.00215,
+        "last_turn_usd": 0.03714,
+        "ratio_last_over_first": 17.3
+      },
+      "context": {
+        "tokens_first": 559,
+        "tokens_last": 13231,
+        "cached_tokens_last": 0,
+        "turns_with_cache_hit": 0
+      },
+      "memory_check": "passed"
+    },
+    {
+      "vendor": "OpenAI gpt-realtime-2.1",
+      "run_date": "2026-08-17",
+      "turns_completed": 40,
+      "latency_ms": {
+        "p50": 1253.0,
+        "p95": 1389.0
+      },
+      "cost": {
+        "total_usd": 0.597155,
+        "first_turn_usd": 0.006136,
+        "last_turn_usd": 0.007679,
+        "ratio_last_over_first": 1.25
+      },
+      "context": {
+        "tokens_first": 108,
+        "tokens_last": 3740,
+        "cached_tokens_last": 3648,
+        "turns_with_cache_hit": 31
+      },
+      "cost_variance": {
+        "turns_without_cache_hit": 9,
+        "max_turn_usd": 0.044804,
+        "median_turn_usd": 0.010995
+      },
+      "memory_check": "passed",
+      "per_turn_usd": [
+        0.006136,
+        0.009612,
+        0.009463,
+        0.013348,
+        0.015588,
+        0.018244,
+        0.020784,
+        0.02248,
+        0.0253,
+        0.006714,
+        0.015756,
+        0.021683,
+        0.008942,
+        0.007274,
+        0.01465,
+        0.041392,
+        0.011207,
+        0.025338,
+        0.028294,
+        0.007313,
+        0.009989,
+        0.00763,
+        0.01023,
+        0.020836,
+        0.011133,
+        0.012989,
+        0.044804,
+        0.007388,
+        0.009928,
+        0.028484,
+        0.010085,
+        0.007644,
+        0.010856,
+        0.008641,
+        0.011301,
+        0.009246,
+        0.009819,
+        0.008002,
+        0.020953,
+        0.007679
+      ],
+      "per_turn_first_audio_ms": [
+        1348,
+        1365,
+        1164,
+        1105,
+        1282,
+        1081,
+        1275,
+        1061,
+        1312,
+        1186,
+        1277,
+        1128,
+        1819,
+        1196,
+        1281,
+        1157,
+        1242,
+        1289,
+        1253,
+        1120,
+        1274,
+        1176,
+        1200,
+        1223,
+        1325,
+        1182,
+        1292,
+        1129,
+        1327,
+        1566,
+        1365,
+        1133,
+        1389,
+        1215,
+        1340,
+        1105,
+        1361,
+        1124,
+        1374,
+        1270
+      ]
+    },
+    {
+      "vendor": "Presence",
+      "run_date": "2026-08-30",
+      "turns_completed": 40,
+      "status": null,
+      "latency_ms": {
+        "p50": 1395,
+        "p95": 1586,
+        "session_start_turn_1": 1805
+      },
+      "cost": {
+        "ratio_last_over_first": 1.0,
+        "model": "occupied session time, not conversation history"
+      },
+      "drift": {
+        "first_half_mean_ms": 1553.6,
+        "second_half_mean_ms": 1358.4
+      },
+      "per_turn_first_audio_ms": [
+        1805,
+        1181,
+        1586,
+        1626,
+        1570,
+        1584,
+        1422,
+        1316,
+        1357,
+        1405,
+        1383,
+        1472,
+        1405,
+        1398,
+        1492,
+        1539,
+        1302,
+        1330,
+        1357,
+        1322,
+        1393,
+        1332,
+        1336,
+        1341,
+        1399,
+        1665,
+        1342,
+        1393,
+        1434,
+        1528,
+        1342,
+        1393,
+        1440,
+        1395,
+        1481,
+        1394,
+        1455,
+        1319,
+        1320,
+        1304
+      ]
+    }
+  ],
+  "headline": {
+    "latency_p50_ms": {
+      "gemini": 1064,
+      "openai": 1253.0,
+      "presence": 1395
+    },
+    "cost_ratio_last_over_first": {
+      "gemini": 17.3,
+      "openai": 1.25,
+      "presence": 1.0
+    }
+  }
+}
