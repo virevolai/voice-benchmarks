@@ -1,5 +1,5 @@
 {
-  "model": "presence-local-stack",
+  "model": "Presence public API",
   "url": "<session websocket>",
   "comparability": {
     "latency_boundary": "wall-clock instant the final speech sample was sent -> first response audio frame; identical definition to the Gemini and OpenAI runs",

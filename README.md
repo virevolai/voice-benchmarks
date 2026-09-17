@@ -77,15 +77,20 @@ PYTHONPATH=harness uv run --project . python harness/benchmark_async_think.py --
 PYTHONPATH=harness uv run --project . python harness/benchmark_presence_long_session.py --turns 40
 ```
 
-You need a credential per vendor you want to measure, and each one talks to
-that vendor directly: OpenAI and Gemini are called with your own keys, and
-nothing routes through Bohita. Run one vendor, two, or all three.
+You need a credential per vendor you want to measure. OpenAI and Gemini are
+called directly with your own keys; Presence uses the public Bohita API and
+the scoped realtime URL it returns. Run one vendor, two, or all three.
 
 `BOHITA_API_KEY` is only for the Presence line. The harness creates a session
 (`POST /v1/sessions`, default base `https://api.bohita.com`) and uses
-the `realtime.url` it returns — the same path an integrator takes. Override
-the base with `BOHITA_API_BASE`, or set `PRESENCE_WS_URL` to point at an
-existing deployment and skip session creation entirely.
+the `realtime.url` it returns — the same path an integrator takes. The public
+API is `https://api.bohita.com`; set `BOHITA_API_BASE_URL` only when testing a
+different compatible deployment. Set `PRESENCE_WS_URL` to point at an existing
+session and skip session creation entirely.
+
+The harness generates a fresh idempotency key for each new benchmark session.
+Set `BENCH_IDEMPOTENCY_KEY` when retrying a request whose outcome is unknown so
+the same admission attempt can be replayed safely.
 
 That URL carries a short-lived, session-scoped token. The harness treats it as
 a credential and never writes it to `results/`, so a run file is safe to

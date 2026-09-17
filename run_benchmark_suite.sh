@@ -1,7 +1,7 @@
 #!/bin/sh
 # Reproduce the long-session voice benchmark end to end.
 #
-#   scripts/run_benchmark_suite.sh [turns]
+#   ./run_benchmark_suite.sh [turns]
 #
 # Runs each vendor against identical fixtures and rebuilds the normalised
 # summary. Any vendor whose key is absent is skipped with a notice rather than

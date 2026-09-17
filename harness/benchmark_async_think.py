@@ -683,7 +683,7 @@ def main() -> None:
     ap.add_argument("--url", default="", help="presence: session websocket")
     ap.add_argument("--model", default="gpt-realtime-2.1")
     ap.add_argument("--voice", default="marin")
-    ap.add_argument("--gemini-model", default="gemini-2.5-flash-native-audio-preview-09-2025")
+    ap.add_argument("--gemini-model", default="gemini-3.1-flash-live-preview")
     ap.add_argument("--gemini-voice", default="Zephyr")
     # Short by default. A long pause risks the tool resolving before the
     # follow-up is even sent, which skips the measurement entirely — the
@@ -705,6 +705,11 @@ def main() -> None:
     )
     result = {
         "vendor": args.vendor,
+        "model": (
+            args.gemini_model if args.vendor == "gemini"
+            else args.model if args.vendor == "openai"
+            else "Presence public API"
+        ),
         "probe_turn": args.probe_turn,
         "measures": (
             "whether new user speech gets a reply while a tool call is still "

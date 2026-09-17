@@ -1,5 +1,6 @@
 {
   "vendor": "presence",
+  "model": "Presence public API",
   "probe_turn": 8,
   "measures": "whether new user speech gets a reply while a tool call is still pending; participant-observable, not vendor-internal",
   "simulated_tool_seconds": null,

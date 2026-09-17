@@ -170,7 +170,7 @@ async def run(args) -> dict:
     latencies = [float(t["first_audio_ms"]) for t in turns]
 
     return {
-        "model": "presence-local-stack",
+        "model": "Presence public API",
         # Deliberately not the resolved URL: it carries a session-scoped
         # token, and results in this repo are published.
         "url": "<session websocket>",

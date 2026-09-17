@@ -1,5 +1,6 @@
 {
   "vendor": "openai",
+  "model": "gpt-realtime-2.1",
   "probe_turn": 8,
   "measures": "whether new user speech gets a reply while a tool call is still pending; participant-observable, not vendor-internal",
   "simulated_tool_seconds": 20.0,
